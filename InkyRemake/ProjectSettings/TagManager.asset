@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GM
   - Coin
+  - CoinCollector
   layers:
   - Default
   - TransparentFX
@@ -48,4 +49,7 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 2469736667
+    locked: 0
+  - name: Coins
+    uniqueID: 2085493543
     locked: 0
