@@ -5,42 +5,45 @@ using UnityEngine;
 public class Rotator : MonoBehaviour
 {
     [Header("Rotation Settings")]
-    [SerializeField] private float minRotationSpeed = 0f;
-    [SerializeField] private float maxRotationSpeed;
-
     [SerializeField] private float rotateSpeed;
 
-    private enum RotationType{Horizontal, Vertical, Round}
-    [SerializeField] private RotationType rotationType; 
-    private enum RotationDirection{Right, Left}
+    [Space]
+    [SerializeField] private bool randomSpeed;
+    [SerializeField] private float minRotationSpeed;
+    [SerializeField] private float maxRotationSpeed;
+
+    [Header("Rotation Type and Direction")]
+    [SerializeField] private RotationType rotationType;
     [SerializeField] private RotationDirection rotationDirection;
 
+    private enum RotationType{Horizontal, Vertical, Round}
+    private enum RotationDirection{Right, Left}
+
+    private Vector3 vectorType;
+  
+    private void Start() {
+        if(randomSpeed) {
+            rotateSpeed = Random.Range(minRotationSpeed, maxRotationSpeed);
+        }
+        if(rotationDirection == RotationDirection.Left) {
+            rotateSpeed = (-rotateSpeed);
+        }
+
+        vectorType = setRotationType(rotationType);
+    }
+
+    private Vector3 setRotationType(RotationType type) {
+        if(type == RotationType.Horizontal) {
+            return new Vector3(0,1,0);
+        } else if(type == RotationType.Vertical) {
+            return new Vector3(1,0,0);
+        } else {
+            return new Vector3(0,0,1);
+        }
+    }
 
     private void Update()
     {
-        switch (rotationType)
-        {
-            case RotationType.Horizontal:
-                if(rotationDirection == RotationDirection.Right) {
-                    transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime, Space.Self);
-                } else {
-                    transform.Rotate(Vector3.up * -rotateSpeed * Time.deltaTime, Space.Self);
-                }
-            break;
-            case RotationType.Vertical:
-                if(rotationDirection == RotationDirection.Right) {
-                    transform.Rotate(Vector3.right * rotateSpeed * Time.deltaTime, Space.Self);
-                } else {
-                    transform.Rotate(Vector3.right * -rotateSpeed * Time.deltaTime, Space.Self);
-                }
-            break;
-            case RotationType.Round:
-                if(rotationDirection == RotationDirection.Right) {
-                    transform.Rotate(Vector3.forward * -rotateSpeed * Time.deltaTime, Space.Self);
-                } else {
-                    transform.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime, Space.Self);
-                }
-            break;
-        }
+        transform.Rotate(vectorType * rotateSpeed * Time.deltaTime, Space.Self);
     }
 }
