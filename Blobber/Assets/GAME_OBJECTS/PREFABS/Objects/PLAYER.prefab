@@ -151,7 +151,7 @@ MonoBehaviour:
   - {x: 0.5, y: -0.74, z: 0}
   m_ShapePathHash: -1180071034
   m_Mesh: {fileID: 0}
-  m_InstanceId: 51178
+  m_InstanceId: 62018
 --- !u!1 &1520350566135430063
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,11 +196,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2298285843214277621}
+  - component: {fileID: 5644099837822801401}
   - component: {fileID: 7440230340666539489}
   - component: {fileID: 5922829402926107641}
   - component: {fileID: 4420392356646779149}
-  - component: {fileID: 5644099837822801401}
-  - component: {fileID: 6964021361909328212}
+  - component: {fileID: 6347648592052664545}
   - component: {fileID: 3678232240349351007}
   m_Layer: 0
   m_Name: PLAYER
@@ -228,6 +228,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5644099837822801401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2315761605475444595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ab06665d16c9a64a99bb13802eb3f32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  jumpForce: 0
+  dashForce: 0
+  checkRadius: 0.5
+  canMove: 1
+  canJump: 0
+  canDubbleJump: 0
+  isGrounded: 0
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 8
+  health: 10
+  numOfHearts: 10
+  rb: {fileID: 7440230340666539489}
+  groundCheck: {fileID: 5579651540320048046}
+  anim: {fileID: 3678232240349351007}
+  input: {fileID: 6347648592052664545}
 --- !u!50 &7440230340666539489
 Rigidbody2D:
   serializedVersion: 4
@@ -291,47 +320,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.3222787}
   m_EdgeRadius: 0
---- !u!114 &5644099837822801401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2315761605475444595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ab06665d16c9a64a99bb13802eb3f32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
-  jumpforce: 30
-  checkRadius: 0.5
-  canMove: 1
-  canJump: 0
-  canDubbleJump: 0
-  isGrounded: 0
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 8
-  health: 10
-  numOfHearts: 10
-  hearts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  fullHearth: {fileID: 21300000, guid: f7f73d0f57bf9294497ec1f9e7384858, type: 3}
-  emptyHearth: {fileID: 21300000, guid: 180e0a9363516cb4c822d2d5f282f3f1, type: 3}
-  rb: {fileID: 7440230340666539489}
-  groundCheck: {fileID: 5579651540320048046}
-  anim: {fileID: 3678232240349351007}
---- !u!114 &6964021361909328212
+--- !u!114 &6347648592052664545
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -344,7 +333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 8681f9ac05b292e47bd105408dcfc195, type: 3}
-  m_NotificationBehavior: 2
+  m_NotificationBehavior: 1
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -357,19 +346,7 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5644099837822801401}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: CalculateMovement
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 351f2ccd-1f9f-44bf-9bec-d62ac5c5f408
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
@@ -377,21 +354,13 @@ MonoBehaviour:
     m_ActionId: 3870bf77-8629-450e-b2a6-b303788ff9cd
     m_ActionName: Player/Interaction[/Keyboard/e]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5644099837822801401}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Jump
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 306565bc-d34e-4822-bfa0-db55374f0e85
     m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6ec4d950-9b4f-4db2-8ef8-3f3c824a8c85
+    m_ActionName: Player/Dash[/Keyboard/shift]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 8e6aaac6-9456-4823-bf51-478a4d14c8f5
@@ -520,7 +489,7 @@ Transform:
   m_GameObject: {fileID: 4823081128078725247}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.09320005, y: -0.07239978, z: 0}
-  m_LocalScale: {x: 0.23241727, y: 1.3410738, z: 1}
+  m_LocalScale: {x: 0.2324173, y: 1.3410738, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 663488839162553048}
@@ -635,7 +604,7 @@ Transform:
   m_GameObject: {fileID: 6801465568716266247}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.188, y: 0.242, z: 0}
-  m_LocalScale: {x: 0.11640125, y: 0.13127297, z: 1}
+  m_LocalScale: {x: 0.1164012, y: 0.13127297, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4179864180606903577}
@@ -718,8 +687,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6924401412040061137}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.14849982, y: 0.22419994, z: 0}
-  m_LocalScale: {x: 0.70308244, y: 0.37603375, z: 1}
+  m_LocalPosition: {x: 0.1484998, y: 0.22419994, z: 0}
+  m_LocalScale: {x: 0.7030824, y: 0.37603375, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 663488839162553048}
@@ -887,7 +856,7 @@ Transform:
   m_GameObject: {fileID: 8328658135738073787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.377, y: 0.242, z: 0}
-  m_LocalScale: {x: 0.11640125, y: 0.13127297, z: 1}
+  m_LocalScale: {x: 0.1164012, y: 0.13127297, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4179864180606903577}
@@ -970,7 +939,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9181988223147525989}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.050500236, y: -0.06959979, z: 0}
+  m_LocalPosition: {x: -0.05050024, y: -0.06959979, z: 0}
   m_LocalScale: {x: 0.8989, y: 0.6698143, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

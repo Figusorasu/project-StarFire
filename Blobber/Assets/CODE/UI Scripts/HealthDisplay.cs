@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class HealthDisplay : MonoBehaviour
 {
-    public int health;
-    public int maxHealth;
+    private int health;
+    private int numOfHearts;
 
     [SerializeField] private Image[] hearts;
     [SerializeField] private Sprite fullHearth;
@@ -14,15 +14,31 @@ public class HealthDisplay : MonoBehaviour
 
     private GameManager GM;
 
+    private PlayerController player;
+
     private void Start() {
-        health = maxHealth;
+        health = numOfHearts;
         GM = GameObject.FindGameObjectWithTag("GM").GetComponent<GameManager>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void Update() {
+        health = player.health;
+        numOfHearts = player.numOfHearts;
+
+        if(health > numOfHearts) {
+            health = numOfHearts;
+        }
+
         for (int i = 0; i < hearts.Length; i++)
         {
             if(i < health) {
+                hearts[i].sprite = fullHearth;
+            } else {
+                hearts[i].sprite = emptyHearth;
+            }
+
+            if(i > numOfHearts) {
                 hearts[i].enabled = true;
             } else {
                 hearts[i].enabled = false;

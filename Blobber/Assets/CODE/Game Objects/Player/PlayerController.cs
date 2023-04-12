@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement, Jump & Ground Detection")]
     public float speed;
-    public float jumpforce;
+    public float jumpForce;
+    public float dashForce;
     public float checkRadius;
 
     [HideInInspector] public bool canMove = true;
@@ -22,22 +23,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
 
     private float inputHorizontal;
-    private float inputVertical;
     private bool facingRight = true;
 
-    [Header("Health System")]
+    [Header("Stats")]
     public int health;
     public int numOfHearts;
-
-    [SerializeField] private Image[] hearts;
-    [SerializeField] private Sprite fullHearth;
-    [SerializeField] private Sprite emptyHearth;
 
     [Header("Components")]
     [InspectorName("Rigidbody2D")] public Rigidbody2D rb;
 
     [SerializeField] private Transform groundCheck;
-    [SerializeField, InspectorName("Animator")] private Animator anim;
+    [SerializeField] private Animator anim;
+    [SerializeField] private PlayerInput input;
 
     private GameManager GM;
 
@@ -56,24 +53,13 @@ public class PlayerController : MonoBehaviour
             canJump = false;
         }
 
-        if(health > numOfHearts) {
-            health = numOfHearts;
+        // ANIMATIONS
+        if(rb.velocity.x == 0) {
+            anim.SetBool("isMoving", false);
+        } else {
+            anim.SetBool("isMoving", true);
         }
-
-        for (int i = 0; i < hearts.Length; i++)
-        {
-            if(i < health) {
-                hearts[i].sprite = fullHearth;
-            } else {
-                hearts[i].sprite = emptyHearth;
-            }
-
-            if(i < numOfHearts) {
-                hearts[i].enabled = true;
-            } else {
-                hearts[i].enabled = false;
-            }
-        }
+        anim.SetBool("isGrounded", isGrounded);
 
     }
 
@@ -107,19 +93,44 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     //=======================================================================================//
-    #region Input System Methods
+    #region Input System
 
-    public void CalculateMovement(InputAction.CallbackContext ctx) {
-        inputVertical = ctx.ReadValue<Vector2>().y;
-        inputHorizontal = ctx.ReadValue<Vector2>().x;
+    private void OnEnable() {
+        input.onActionTriggered += PlayerInputOnActionTriggered;
     }
 
-    public void Jump(InputAction.CallbackContext ctx) {
-        if(ctx.performed && canJump) {
-            rb.velocity = Vector2.up * jumpforce;
+    private void PlayerInputOnActionTriggered(InputAction.CallbackContext ctx) {
+
+        if(ctx.action.name == "Move") {
+            inputHorizontal = ctx.ReadValue<Vector2>().x;
+        }
+        
+        if(ctx.action.name == "Jump") {
+            rb.velocity = Vector2.up * jumpForce;
+        }
+
+        if(ctx.action.name == "Dash") {
+            rb.velocity = Vector2.right * dashForce;
         }
     }
 
+
+    /* 
+    public void OnMove(InputAction.CallbackContext ctx) {
+        inputHorizontal = ctx.ReadValue<Vector2>().x;
+    }
+
+    public void OnJump(InputAction.CallbackContext ctx) {
+        if(ctx.performed && canJump) {
+            rb.velocity = Vector2.up * jumpForce;
+        }
+    }
+
+    public void OnDash(InputAction.CallbackContext ctx) {
+        if(ctx.performed) {
+            rb.velocity = Vector2.right * dashForce;
+        }
+    }*/
 
     #endregion
     //=======================================================================================//

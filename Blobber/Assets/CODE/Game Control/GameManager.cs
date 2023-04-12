@@ -16,5 +16,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    [Header("Player Progression")]
+    public bool unlockMultiJump = false;
+    public bool unlockDash = false;
+    public bool unlockStomp = false;
+
+
 }
