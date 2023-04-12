@@ -12,6 +12,9 @@ public class Rotator : MonoBehaviour
     [SerializeField] private float minRotationSpeed;
     [SerializeField] private float maxRotationSpeed;
 
+    [Space]
+    [SerializeField] private bool randomStartTime;
+
     [Header("Rotation Type and Direction")]
     [SerializeField] private RotationType rotationType;
     [SerializeField] private RotationDirection rotationDirection;
@@ -20,6 +23,8 @@ public class Rotator : MonoBehaviour
     private enum RotationDirection{Right, Left}
 
     private Vector3 vectorType;
+
+    private bool startRotation = false;
   
     private void Start() {
         if(randomSpeed) {
@@ -30,6 +35,12 @@ public class Rotator : MonoBehaviour
         }
 
         vectorType = setRotationType(rotationType);
+
+        if(randomStartTime) {
+            StartCoroutine("waitForSeconds");
+        } else {
+            startRotation = true;
+        }
     }
 
     private Vector3 setRotationType(RotationType type) {
@@ -42,8 +53,15 @@ public class Rotator : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        transform.Rotate(vectorType * rotateSpeed * Time.deltaTime, Space.Self);
+    private IEnumerator waitForSeconds() {
+        float waitTime = Random.Range(0f, 2f);
+        yield return new WaitForSeconds(waitTime);
+        startRotation = true;
+    }
+
+    private void Update() {   
+        if(startRotation) {
+            transform.Rotate(vectorType * rotateSpeed * Time.deltaTime, Space.Self);
+        }
     }
 }

@@ -3,38 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {   
     #region Variables
 
-    [Header("Movement")]
+    [Header("Movement, Jump & Ground Detection")]
     public float speed;
+    public float jumpforce;
+    public float checkRadius;
 
     [HideInInspector] public bool canMove = true;
+    [HideInInspector] public bool canJump = false;
+    [HideInInspector] public bool canDubbleJump = false;
+    [HideInInspector] public bool isGrounded;
+
+    [SerializeField] private LayerMask whatIsGround;
 
     private float inputHorizontal;
     private float inputVertical;
     private bool facingRight = true;
 
-    [Header("Jump")]
-    public float jumpforce;
+    [Header("Health System")]
+    public int health;
+    public int numOfHearts;
 
-     public bool canJump = false;
-    [HideInInspector] public bool canDubbleJump = false;
-    
-    [Header("Ground Detection")]
-    public float checkRadius;
+    [SerializeField] private Image[] hearts;
+    [SerializeField] private Sprite fullHearth;
+    [SerializeField] private Sprite emptyHearth;
 
-    [SerializeField] private LayerMask whatIsGround;
-
-    [HideInInspector] public bool isGrounded;
-    
     [Header("Components")]
-    public Rigidbody2D rb;
+    [InspectorName("Rigidbody2D")] public Rigidbody2D rb;
 
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private Animator anim;
+    [SerializeField, InspectorName("Animator")] private Animator anim;
 
     private GameManager GM;
 
@@ -51,6 +54,25 @@ public class PlayerController : MonoBehaviour
             canJump = true;
         } else {
             canJump = false;
+        }
+
+        if(health > numOfHearts) {
+            health = numOfHearts;
+        }
+
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            if(i < health) {
+                hearts[i].sprite = fullHearth;
+            } else {
+                hearts[i].sprite = emptyHearth;
+            }
+
+            if(i < numOfHearts) {
+                hearts[i].enabled = true;
+            } else {
+                hearts[i].enabled = false;
+            }
         }
 
     }

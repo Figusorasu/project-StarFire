@@ -195,7 +195,7 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 40650
+  m_InstanceId: -1396
 --- !u!1 &2315761605475444595
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,15 +312,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  canMove: 1
   jumpforce: 30
+  checkRadius: 0.5
+  canMove: 1
   canJump: 0
   canDubbleJump: 0
-  checkRadius: 0.5
+  isGrounded: 0
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
-  isGrounded: 0
+  health: 10
+  numOfHearts: 10
+  hearts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  fullHearth: {fileID: 21300000, guid: f7f73d0f57bf9294497ec1f9e7384858, type: 3}
+  emptyHearth: {fileID: 21300000, guid: 180e0a9363516cb4c822d2d5f282f3f1, type: 3}
   rb: {fileID: 7440230340666539489}
   groundCheck: {fileID: 5579651540320048046}
   anim: {fileID: 2843130717341456942}
