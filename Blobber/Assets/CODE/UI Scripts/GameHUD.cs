@@ -5,12 +5,12 @@ using UnityEngine;
 public class GameHUD : MonoBehaviour
 {
     [SerializeField] private GameObject debugInfo;
-    private bool isActive = false;
+    private bool isActive = true;
 
     private void Update() {
         debugInfo.SetActive(isActive);
 
-        if(Input.GetKeyDown(KeyCode.Tilde)) {
+        if(Input.GetKeyDown(KeyCode.F3)) {
             isActive = !isActive;
         }
     }

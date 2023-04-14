@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class DebugInfo : MonoBehaviour
@@ -10,33 +7,44 @@ public class DebugInfo : MonoBehaviour
 
     private GameObject player;
 
+    private float pPos_x;
+    private float pPos_y;
+    private float pVel_x;
+    private float pVel_y;
+    private float yLastVelocity = 0;
+    private float yMaxVelocity;
+
     private void Start() {
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void Update() {
+        pPos_x = (float)System.Math.Round(player.GetComponent<Transform>().position.x, 2);
+        pPos_y = (float)System.Math.Round(player.GetComponent<Transform>().position.y, 2);
 
-        float pPos_x = player.GetComponent<Transform>().position.x;
-        float pPos_y = player.GetComponent<Transform>().position.y;
+        pVel_x = (float)System.Math.Round(player.GetComponent<PlayerController>()._rb.velocity.x, 2);
+        pVel_y = (float)System.Math.Round(player.GetComponent<PlayerController>()._rb.velocity.y, 2);
 
-        pPos_x = (float)System.Math.Round(pPos_x, 2);
-        pPos_y = (float)System.Math.Round(pPos_y, 2);
-
-        float pVel_x = player.GetComponent<PlayerController>()._rb.velocity.x;
-        float pVel_y = player.GetComponent<PlayerController>()._rb.velocity.y;
-
-        pVel_x = (float)System.Math.Round(pVel_x, 2);
-        pVel_y = (float)System.Math.Round(pVel_y, 2);
+        if(pVel_y > yLastVelocity) {
+            yLastVelocity = pVel_y;
+            yMaxVelocity = pVel_y;
+        }
 
         var debugLog = "";
 
-        debugLog += "FPS: " + CurrentFPS() + "\n\n";
+        debugLog += "FPS: " + CurrentFPS() + "\n";
+        debugLog += "Time: " + System.Math.Round(Time.time, 2) + "\n Δ-time: " + Time.deltaTime + "\n";
+
+        debugLog += "\n";
 
         debugLog += "PLAYER:\n";
         debugLog += "Position: " + pPos_x + "(x), " + pPos_y + "(y);\n";
         debugLog += "Velocity: " + pVel_x + "(x), " + pVel_y + "(y);\n";
+
+        debugLog += "Max Y Velocity: " + (float)System.Math.Round(yMaxVelocity, 2) + "\n";
+
         debugLog += "IsGrounded: " + player.GetComponent<PlayerController>().isGrounded + "\n";
-        debugLog += "";
+        debugLog += "InputHorizontal: " + player.GetComponent<PlayerController>().inputHorizontal + "\n";
 
         debugInfoText.text = debugLog;
     }

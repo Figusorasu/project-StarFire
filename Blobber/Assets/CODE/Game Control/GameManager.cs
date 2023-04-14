@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private int targetedFramerate;
+
     private static GameManager instance;
 
     private void Awake() {
@@ -13,6 +15,14 @@ public class GameManager : MonoBehaviour
         } else {
             Destroy(gameObject);
             return;
+        }
+
+        Application.targetFrameRate = 60;
+    }
+
+    private void Update() {
+        if(targetedFramerate != 0) {
+            Application.targetFrameRate = targetedFramerate;
         }
     }
 
