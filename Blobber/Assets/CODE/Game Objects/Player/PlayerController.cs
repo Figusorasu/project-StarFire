@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
             public float dashForce;
 
             [HideInInspector]
-            public bool canMove = true, canJump = false, canDubbleJump = false;
+            public bool canMove = true, canDubbleJump = false;
 
         [Header("Ground Detection")]
             public float checkRadius;
@@ -52,13 +52,16 @@ public class PlayerController : MonoBehaviour
         }
 
         private void Jump() {
-            if(canJump){
-                _rb.velocity = Vector2.up * jumpForce * Time.deltaTime;
+            Debug.Log("Jump");
+            if(isGrounded){
+                Debug.Log("Jump2");
+                _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
             }
         }
 
         private void Dash() {
             Debug.Log("Dash!");
+            _rb.velocity = new Vector2(dashForce, _rb.velocity.y);
         }
 
         private void OnEnable() {
@@ -75,9 +78,10 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Update() {
-        
-        canJump = isGrounded;
 
+        Debug.Log("xVel: " + _rb.velocity.x + " yVel: " + _rb.velocity.y);
+        Debug.Log("InputHorizontal: " + inputHorizontal);
+        
         // ANIMATIONS
         if(_rb.velocity.x == 0) {
             _anim.SetBool("isMoving", false);
@@ -90,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate() {
         if(canMove) {
-            _rb.velocity = new Vector2(inputHorizontal * speed, _rb.velocity.y) * Time.deltaTime;
+            _rb.velocity = new Vector2(inputHorizontal * speed, _rb.velocity.y);
         }
 
         if(!facingRight && _rb.velocity.x > 0) {
@@ -100,12 +104,6 @@ public class PlayerController : MonoBehaviour
         }
 
         isGrounded = Physics2D.OverlapCircle(_groundCheck.position, checkRadius, whatIsGround);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other) {
-
-        
-        
     }
 
     private void OnDrawGizmosSelected() {
