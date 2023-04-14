@@ -19,10 +19,12 @@ public class PlayerController : MonoBehaviour
 
         [Header("Ground Detection")]
             public float checkRadius;
+            
             [HideInInspector] public bool isGrounded;
+            [HideInInspector] public float inputHorizontal;
 
             [Space, SerializeField] private LayerMask whatIsGround;
-            private float inputHorizontal;
+
             private bool facingRight = true;
 
         [Header("Stats")]
@@ -30,7 +32,7 @@ public class PlayerController : MonoBehaviour
             public int numOfHearts;
 
         [Header("Components")]
-            [SerializeField] private Rigidbody2D _rb;
+            public Rigidbody2D _rb;
             [SerializeField] private Transform _groundCheck;
             [SerializeField] private Animator _anim;
 
@@ -79,8 +81,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update() {
 
-        Debug.Log("xVel: " + _rb.velocity.x + " yVel: " + _rb.velocity.y);
-        Debug.Log("InputHorizontal: " + inputHorizontal);
+        //Debug.Log("xVel: " + _rb.velocity.x + " yVel: " + _rb.velocity.y);
+        //Debug.Log("InputHorizontal: " + inputHorizontal);
         
         // ANIMATIONS
         if(_rb.velocity.x == 0) {
