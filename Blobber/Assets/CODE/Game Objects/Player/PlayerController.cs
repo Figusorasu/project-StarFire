@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviour
 
             [HideInInspector] public bool canMove = true; 
 
-            
             private bool canJump;
             private bool canDubbleJump = false;
             private float jumpTimeCounter;
@@ -64,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
             _inputControls.Player.Move.performed += ctx => inputHorizontal = ctx.ReadValue<Vector2>().x;
             _inputControls.Player.Move.canceled += ctx => inputHorizontal = 0;
-/*
+
             _inputControls.Player.Jump.performed += ctx => {
                 if(canJump) {
                     isJumping = true;
@@ -72,7 +71,7 @@ public class PlayerController : MonoBehaviour
                     _rb.velocity = Vector2.up * jumpForce;
                 }
             };
-*/
+
             _inputControls.Player.Dash.performed += ctx => StartCoroutine("Dash");
         }
 
@@ -159,7 +158,7 @@ public class PlayerController : MonoBehaviour
             _rb.velocity = new Vector2(inputHorizontal * speed, _rb.velocity.y);
         }
 
-        Jump();
+        //Jump();
 
         if(!facingRight && _rb.velocity.x > 0) {
             Flip();
