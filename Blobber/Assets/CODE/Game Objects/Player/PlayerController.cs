@@ -11,11 +11,24 @@ public class PlayerController : MonoBehaviour
 
         [Header("Movement")]
             public float speed;
-            public float jumpForce;
-            public float dashForce;
 
-            [HideInInspector]
-            public bool canMove = true, canDubbleJump = false;
+            public float jumpForce;
+            public float jumpTime;
+            
+            public float dashForce;
+            public float dashTime;
+            public float dashCooldown;
+
+            [HideInInspector] public bool canMove = true; 
+
+            
+            private bool canJump;
+            private bool canDubbleJump = false;
+            private float jumpTimeCounter;
+            private bool isJumping;
+
+            private bool canDash = true;
+            private bool isDashing;
 
         [Header("Ground Detection")]
             public float checkRadius;
@@ -35,6 +48,7 @@ public class PlayerController : MonoBehaviour
             public Rigidbody2D _rb;
             [SerializeField] private Transform _groundCheck;
             [SerializeField] private Animator _anim;
+            [SerializeField] private TrailRenderer _trail;
 
             private GameManager _GM;
             private InputManager _inputControls;
@@ -49,21 +63,45 @@ public class PlayerController : MonoBehaviour
             _inputControls.Player.Move.performed += ctx => inputHorizontal = ctx.ReadValue<Vector2>().x;
             _inputControls.Player.Move.canceled += ctx => inputHorizontal = 0;
 
-            _inputControls.Player.Jump.performed += ctx => Jump();
-            _inputControls.Player.Dash.performed += ctx => Dash();
+            #region Jump
+                _inputControls.Player.Jump.performed += ctx => {
+                    if(canJump) {
+                        isJumping = true;
+                        jumpTimeCounter = jumpTime;
+                        _rb.velocity = Vector2.up * jumpForce;
+                    }
+                };
+                _inputControls.Player.Jump.started += ctx => {
+                    if(isJumping) {
+                        if(jumpTimeCounter > 0) {
+                            _rb.velocity = Vector2.up * jumpForce;
+                            jumpTimeCounter -= Time.deltaTime;
+                        } else {
+                            isJumping = false;
+                        }
+                    }
+                };
+                _inputControls.Player.Jump.canceled += ctx => {
+                    isJumping = false;
+                };
+            #endregion
+
+            _inputControls.Player.Dash.performed += ctx => StartCoroutine("Dash");;
         }
 
-        private void Jump() {
-            Debug.Log("Jump");
-            if(isGrounded){
-                Debug.Log("Jump2");
-                _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-            }
-        }
-
-        private void Dash() {
-            Debug.Log("Dash!");
-            _rb.velocity = new Vector2(dashForce, _rb.velocity.y);
+        private IEnumerator Dash() {
+            canDash = false;
+            isDashing = true;
+            float originalGravity = _rb.gravityScale;
+            _rb.gravityScale = 0f;
+            _rb.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
+            _trail.emitting = true;
+            yield return new WaitForSeconds(dashTime);
+            _trail.emitting = false;
+            _rb.gravityScale = originalGravity;
+            isDashing = false;
+            yield return new WaitForSeconds(dashCooldown);
+            canDash = true;
         }
 
         private void OnEnable() {
@@ -81,8 +119,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update() {
 
-        //Debug.Log("xVel: " + _rb.velocity.x + " yVel: " + _rb.velocity.y);
-        //Debug.Log("InputHorizontal: " + inputHorizontal);
+        if(isDashing) {
+            canMove = false;
+            canJump = false;
+        } else {
+            canMove = true;
+            canJump = isGrounded;
+        }
         
         // ANIMATIONS
         if(_rb.velocity.x == 0) {
@@ -95,6 +138,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate() {
+
         if(canMove) {
             _rb.velocity = new Vector2(inputHorizontal * speed, _rb.velocity.y);
         }
