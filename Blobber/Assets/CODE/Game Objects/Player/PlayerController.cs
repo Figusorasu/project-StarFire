@@ -11,10 +11,10 @@ public class PlayerController : MonoBehaviour
 
         [Header("Movement")]
             public float speed;
-
+            [Space]
             public float jumpForce;
             public float jumpTime;
-            
+            [Space]
             public float dashForce;
             public float dashTime;
             public float dashCooldown;
@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
             private bool canDash = true;
             private bool isDashing;
+            private float originalGravity;
 
         [Header("Ground Detection")]
             public float checkRadius;
@@ -62,43 +63,52 @@ public class PlayerController : MonoBehaviour
 
             _inputControls.Player.Move.performed += ctx => inputHorizontal = ctx.ReadValue<Vector2>().x;
             _inputControls.Player.Move.canceled += ctx => inputHorizontal = 0;
+/*
+            _inputControls.Player.Jump.performed += ctx => {
+                if(canJump) {
+                    isJumping = true;
+                    jumpTimeCounter = jumpTime;
+                    _rb.velocity = Vector2.up * jumpForce;
+                }
+            };
+*/
+            _inputControls.Player.Dash.performed += ctx => StartCoroutine("Dash");
+        }
 
-            #region Jump
-                _inputControls.Player.Jump.performed += ctx => {
-                    if(canJump) {
-                        isJumping = true;
-                        jumpTimeCounter = jumpTime;
+        private void Jump() {
+            if(_inputControls.Player.Jump.WasPressedThisFrame()) {
+                if(canJump) {
+                    isJumping = true;
+                    jumpTimeCounter = jumpTime;
+                    _rb.velocity = Vector2.up * jumpForce;
+                }
+            }
+
+            if(_inputControls.Player.Jump.IsPressed()) {
+                if(isJumping) {
+                    if(jumpTimeCounter > 0) {
                         _rb.velocity = Vector2.up * jumpForce;
+                        jumpTimeCounter -= Time.deltaTime;
+                    } else {
+                        isJumping = false;
                     }
-                };
-                _inputControls.Player.Jump.started += ctx => {
-                    if(isJumping) {
-                        if(jumpTimeCounter > 0) {
-                            _rb.velocity = Vector2.up * jumpForce;
-                            jumpTimeCounter -= Time.deltaTime;
-                        } else {
-                            isJumping = false;
-                        }
-                    }
-                };
-                _inputControls.Player.Jump.canceled += ctx => {
-                    isJumping = false;
-                };
-            #endregion
+                }
+            }
 
-            _inputControls.Player.Dash.performed += ctx => StartCoroutine("Dash");;
+            if(_inputControls.Player.Jump.WasReleasedThisFrame()) {
+                isJumping = false;
+            }
         }
 
         private IEnumerator Dash() {
             canDash = false;
             isDashing = true;
-            float originalGravity = _rb.gravityScale;
+            originalGravity = _rb.gravityScale;
             _rb.gravityScale = 0f;
             _rb.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
             _trail.emitting = true;
             yield return new WaitForSeconds(dashTime);
             _trail.emitting = false;
-            _rb.gravityScale = originalGravity;
             isDashing = false;
             yield return new WaitForSeconds(dashCooldown);
             canDash = true;
@@ -125,6 +135,7 @@ public class PlayerController : MonoBehaviour
         } else {
             canMove = true;
             canJump = isGrounded;
+            _rb.gravityScale = originalGravity;
         }
         
         // ANIMATIONS
@@ -138,10 +149,11 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate() {
-
         if(canMove) {
             _rb.velocity = new Vector2(inputHorizontal * speed, _rb.velocity.y);
         }
+        
+        Jump();
 
         if(!facingRight && _rb.velocity.x > 0) {
             Flip();

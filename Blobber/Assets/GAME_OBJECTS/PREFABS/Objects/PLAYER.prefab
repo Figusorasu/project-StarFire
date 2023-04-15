@@ -202,7 +202,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  jumpForce: 30
+  jumpForce: 20
+  jumpTime: 0.3
   dashForce: 24
   dashTime: 0.2
   dashCooldown: 2
