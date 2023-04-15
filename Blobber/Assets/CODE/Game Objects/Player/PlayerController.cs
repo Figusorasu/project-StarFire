@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
             [Space]
             public float jumpForce;
             public float jumpTime;
+            public float gravityForce;
+
             [Space]
             public float dashForce;
             public float dashTime;
@@ -29,7 +31,6 @@ public class PlayerController : MonoBehaviour
 
             private bool canDash = true;
             private bool isDashing;
-            private float originalGravity;
 
         [Header("Ground Detection")]
             public float checkRadius;
@@ -80,14 +81,14 @@ public class PlayerController : MonoBehaviour
                 if(canJump) {
                     isJumping = true;
                     jumpTimeCounter = jumpTime;
-                    _rb.velocity = Vector2.up * jumpForce;
+                    _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
                 }
             }
 
             if(_inputControls.Player.Jump.IsPressed()) {
                 if(isJumping) {
                     if(jumpTimeCounter > 0) {
-                        _rb.velocity = Vector2.up * jumpForce;
+                        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
                         jumpTimeCounter -= Time.deltaTime;
                     } else {
                         isJumping = false;
@@ -103,7 +104,6 @@ public class PlayerController : MonoBehaviour
         private IEnumerator Dash() {
             canDash = false;
             isDashing = true;
-            originalGravity = _rb.gravityScale;
             _rb.gravityScale = 0f;
             _rb.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
             _trail.emitting = true;
@@ -128,14 +128,15 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Update() {
-
+        _anim.SetBool("isDashing", isDashing);
         if(isDashing) {
+            _anim.SetTrigger("Dash");
             canMove = false;
             canJump = false;
+
         } else {
             canMove = true;
             canJump = isGrounded;
-            _rb.gravityScale = originalGravity;
         }
         
         // ANIMATIONS
@@ -149,10 +150,15 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        if(isDashing) {
+            return;
+        }
+        _rb.gravityScale = gravityForce;
+
         if(canMove) {
             _rb.velocity = new Vector2(inputHorizontal * speed, _rb.velocity.y);
         }
-        
+
         Jump();
 
         if(!facingRight && _rb.velocity.x > 0) {
