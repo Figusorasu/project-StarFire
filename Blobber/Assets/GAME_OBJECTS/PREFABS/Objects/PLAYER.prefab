@@ -291,7 +291,7 @@ MonoBehaviour:
   speed: 10
   jumpForce: 30
   jumpTime: 0.3
-  gravityForce: 15
+  gravityForce: 10
   dashForce: 24
   dashTime: 0.2
   dashCooldown: 2
@@ -301,7 +301,10 @@ MonoBehaviour:
   inputHorizontal: 0
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 88
+  whatIsLava:
+    serializedVersion: 2
+    m_Bits: 128
   health: 10
   numOfHearts: 10
   _rb: {fileID: 679586378540799741}
@@ -320,8 +323,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 2
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
   m_GravityScale: 10
   m_Material: {fileID: 6200000, guid: 179d0d7a610412a42b1f484596ed3e9a, type: 2}
@@ -461,7 +464,7 @@ MonoBehaviour:
   - {x: 0.6135396, y: -0.2796761, z: 0}
   m_ShapePathHash: -1769681105
   m_Mesh: {fileID: 0}
-  m_InstanceId: 37868
+  m_InstanceId: -1476
 --- !u!1 &3147337008803993302
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,38 +549,29 @@ TrailRenderer:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 16.16681
-        outSlope: 16.16681
+        inSlope: 8.879938
+        outSlope: 8.879938
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.17501022
+        outWeight: 0.22413829
       - serializedVersion: 3
-        time: 0.17910448
-        value: 1
-        inSlope: 0.20577402
-        outSlope: 0.20577402
+        time: 0.17313404
+        value: 0.9324315
+        inSlope: -0.3482241
+        outSlope: -0.3482241
         tangentMode: 0
         weightedMode: 0
-        inWeight: 1
-        outWeight: 0
+        inWeight: 0.67241323
+        outWeight: 0.14079452
       - serializedVersion: 3
-        time: 0.5885046
-        value: 0.7837558
-        inSlope: -1.622803
-        outSlope: -1.622803
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0
+        time: 1
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -1.2846968
+        outSlope: -1.2846968
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.1316726
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -5650,7 +5644,7 @@ MonoBehaviour:
   - {x: 0.5, y: -0.74, z: 0}
   m_ShapePathHash: -1180071034
   m_Mesh: {fileID: 0}
-  m_InstanceId: 37908
+  m_InstanceId: -1470
 --- !u!1 &6801465568716266247
 GameObject:
   m_ObjectHideFlags: 0

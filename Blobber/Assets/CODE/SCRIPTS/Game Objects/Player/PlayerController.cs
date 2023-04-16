@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
             [HideInInspector] public float inputHorizontal;
 
             [Space, SerializeField] private LayerMask whatIsGround;
+            [SerializeField] private LayerMask whatIsLava;
 
             private bool facingRight = true;
 
@@ -55,7 +56,11 @@ public class PlayerController : MonoBehaviour
             private InputManager _inputControls;
 
     #endregion
-    //=======================================================================================//
+    
+    public delegate void LavaCollision(bool i);
+    private LavaCollision lavaCollision;
+
+
     #region InputHandler
 
         private void Awake() {
@@ -124,6 +129,12 @@ public class PlayerController : MonoBehaviour
 
     private void Start() {
         _GM = GameObject.FindGameObjectWithTag("GM").GetComponent<GameManager>();
+
+        lavaCollision = (bool isInLava) => {
+            if(isInLava) {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+        };
     }
 
     private void Update() {
@@ -167,6 +178,9 @@ public class PlayerController : MonoBehaviour
         }
 
         isGrounded = Physics2D.OverlapCircle(_groundCheck.position, checkRadius, whatIsGround);
+
+        bool isInLava = Physics2D.OverlapCircle(_groundCheck.position, checkRadius, whatIsLava); 
+        lavaCollision(isInLava);
     }
 
     private void OnDrawGizmosSelected() {
