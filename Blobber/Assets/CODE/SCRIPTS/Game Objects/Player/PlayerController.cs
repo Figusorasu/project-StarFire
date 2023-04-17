@@ -222,7 +222,7 @@ public class PlayerController : MonoBehaviour
         yield return null;
     }
 
-    private IEnumerator SetAnimations(){
+    private IEnumerator SetAnimations() {
         _anim.SetBool("isDashing", isDashing);
         _anim.SetBool("isGrounded", isGrounded);
 
