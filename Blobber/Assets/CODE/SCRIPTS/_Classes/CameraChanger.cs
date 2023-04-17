@@ -14,7 +14,9 @@ public class CameraChanger : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        cam.GetComponent<CameraController>().minPosition = newMinPos;
-        cam.GetComponent<CameraController>().maxPosition = newMaxPos;
+        if(other.CompareTag("Player")) {
+            cam.GetComponent<CameraController>().minPosition = newMinPos;
+            cam.GetComponent<CameraController>().maxPosition = newMaxPos;
+        }
     }
 }

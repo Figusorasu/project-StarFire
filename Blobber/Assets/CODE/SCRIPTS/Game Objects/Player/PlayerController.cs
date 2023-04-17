@@ -39,6 +39,10 @@ public class PlayerController : MonoBehaviour
             [HideInInspector] public bool isOnSolidGround;
             [HideInInspector] public bool isInLava;
 
+            [Space, SerializeField] private Transform _groundCheck;
+            [SerializeField] private Transform _solidGroundCheck;
+            [SerializeField] private Transform _lavaCheck;
+
             [Space, SerializeField] private LayerMask whatIsGround;
             [SerializeField] private LayerMask whatIsSolidGround;
             [SerializeField] private LayerMask whatIsLava;
@@ -55,9 +59,6 @@ public class PlayerController : MonoBehaviour
         [Header("Components")]
             public Rigidbody2D _playerRB;
             public Transform _playerTR;
-            [SerializeField] private Transform _groundCheck;
-            [SerializeField] private Transform _solidGroundCheck;
-            [SerializeField] private Transform _lavaCheck;
             [SerializeField] private Animator _anim;
             [SerializeField] private TrailRenderer _trail;
 
@@ -182,7 +183,8 @@ public class PlayerController : MonoBehaviour
         if(isDashing) {
             return;
         }
-        StartCoroutine("CheckGroundCollisions");
+
+        StartCoroutine(CheckGroundCollisions());
         Move();
         //Jump();
 
