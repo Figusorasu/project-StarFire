@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour
             [HideInInspector] public float inputHorizontal;
 
             private bool canJump;
-            private bool canDubbleJump = false;
             private float jumpTimeCounter;
             private bool isJumping;
 
@@ -245,5 +244,7 @@ public class PlayerController : MonoBehaviour
         Scaler.x *= -1;
         transform.localScale = Scaler;
     }
+
+
 
 }

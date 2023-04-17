@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,9 +28,8 @@ public class GameManager : MonoBehaviour
     }
 
     [Header("Player Progression")]
-    public bool unlockMultiJump = false;
-    public bool unlockDash = false;
-    public bool unlockStomp = false;
-
+        public bool unlockMultiJump = false;
+        public bool unlockDash = false;
+        public bool unlockStomp = false;
 
 }
