@@ -22,8 +22,8 @@ public class DebugInfo : MonoBehaviour
         pPos_x = (float)System.Math.Round(player.GetComponent<Transform>().position.x, 2);
         pPos_y = (float)System.Math.Round(player.GetComponent<Transform>().position.y, 2);
 
-        pVel_x = (float)System.Math.Round(player.GetComponent<PlayerController>()._rb.velocity.x, 2);
-        pVel_y = (float)System.Math.Round(player.GetComponent<PlayerController>()._rb.velocity.y, 2);
+        pVel_x = (float)System.Math.Round(player.GetComponent<PlayerController>()._playerRB.velocity.x, 2);
+        pVel_y = (float)System.Math.Round(player.GetComponent<PlayerController>()._playerRB.velocity.y, 2);
 
         if(pVel_y > yLastVelocity) {
             yLastVelocity = pVel_y;

@@ -161,7 +161,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2298285843214277621}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1469632304488080011
 GameObject:
@@ -265,6 +265,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2298285843214277621}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2061382308193564223
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7473132152540608522}
+  m_Layer: 0
+  m_Name: SolidGroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 8418204508859773708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7473132152540608522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061382308193564223}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.504, y: -0.751, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2298285843214277621}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2315761605475444595
@@ -303,6 +334,7 @@ Transform:
   - {fileID: 6131364397881758987}
   - {fileID: 1992415674437903693}
   - {fileID: 5579651540320048046}
+  - {fileID: 7473132152540608522}
   - {fileID: 8144986568746835833}
   - {fileID: 1589352089794286466}
   m_Father: {fileID: 0}
@@ -328,19 +360,26 @@ MonoBehaviour:
   dashTime: 0.2
   dashCooldown: 2
   canMove: 1
+  inputHorizontal: 0
   checkRadius: 0.5
   isGrounded: 0
-  inputHorizontal: 0
+  isOnSolidGround: 0
+  isInLava: 0
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 88
+    m_Bits: 72
+  whatIsSolidGround:
+    serializedVersion: 2
+    m_Bits: 8
   whatIsLava:
     serializedVersion: 2
     m_Bits: 128
   health: 10
   numOfHearts: 10
-  _rb: {fileID: 679586378540799741}
+  _playerRB: {fileID: 679586378540799741}
+  _playerTR: {fileID: 2298285843214277621}
   _groundCheck: {fileID: 5579651540320048046}
+  _solidGroundCheck: {fileID: 7473132152540608522}
   _lavaCheck: {fileID: 8144986568746835833}
   _anim: {fileID: 3678232240349351007}
   _trail: {fileID: 5550856910772465890}
@@ -497,7 +536,7 @@ MonoBehaviour:
   - {x: 0.6135396, y: -0.2796761, z: 0}
   m_ShapePathHash: -1769681105
   m_Mesh: {fileID: 0}
-  m_InstanceId: 69466
+  m_InstanceId: 43094
 --- !u!1 &3147337008803993302
 GameObject:
   m_ObjectHideFlags: 0
@@ -5668,7 +5707,7 @@ MonoBehaviour:
   - {x: 0.5, y: -0.74, z: 0}
   m_ShapePathHash: -1180071034
   m_Mesh: {fileID: 0}
-  m_InstanceId: 69508
+  m_InstanceId: 43136
 --- !u!1 &6801465568716266247
 GameObject:
   m_ObjectHideFlags: 0

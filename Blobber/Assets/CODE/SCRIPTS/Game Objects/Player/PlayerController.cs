@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
             public float dashCooldown;
 
             [HideInInspector] public bool canMove = true; 
+            [HideInInspector] public float inputHorizontal;
 
             private bool canJump;
             private bool canDubbleJump = false;
@@ -35,20 +36,27 @@ public class PlayerController : MonoBehaviour
             public float checkRadius;
             
             [HideInInspector] public bool isGrounded;
-            [HideInInspector] public float inputHorizontal;
+            [HideInInspector] public bool isOnSolidGround;
+            [HideInInspector] public bool isInLava;
 
             [Space, SerializeField] private LayerMask whatIsGround;
+            [SerializeField] private LayerMask whatIsSolidGround;
             [SerializeField] private LayerMask whatIsLava;
 
             private bool facingRight = true;
+
+        [Header("Respawn system")]
+            private Vector2 lastSolidGroundedPos;
 
         [Header("Stats")]
             public int health;
             public int numOfHearts;
 
         [Header("Components")]
-            public Rigidbody2D _rb;
+            public Rigidbody2D _playerRB;
+            public Transform _playerTR;
             [SerializeField] private Transform _groundCheck;
+            [SerializeField] private Transform _solidGroundCheck;
             [SerializeField] private Transform _lavaCheck;
             [SerializeField] private Animator _anim;
             [SerializeField] private TrailRenderer _trail;
@@ -74,11 +82,17 @@ public class PlayerController : MonoBehaviour
                 if(canJump) {
                     isJumping = true;
                     jumpTimeCounter = jumpTime;
-                    _rb.velocity = Vector2.up * jumpForce;
+                    _playerRB.velocity = Vector2.up * jumpForce;
                 }
             };
 
             _inputControls.Player.Dash.performed += ctx => StartCoroutine("Dash");
+        }
+
+        private void Move() {
+            if(canMove) {
+                _playerRB.velocity = new Vector2(inputHorizontal * speed, _playerRB.velocity.y);
+            }
         }
 
         private void Jump() {
@@ -86,14 +100,14 @@ public class PlayerController : MonoBehaviour
                 if(canJump) {
                     isJumping = true;
                     jumpTimeCounter = jumpTime;
-                    _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+                    _playerRB.velocity = new Vector2(_playerRB.velocity.x, jumpForce);
                 }
             }
 
             if(_inputControls.Player.Jump.IsPressed()) {
                 if(isJumping) {
                     if(jumpTimeCounter > 0) {
-                        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+                        _playerRB.velocity = new Vector2(_playerRB.velocity.x, jumpForce);
                         jumpTimeCounter -= Time.deltaTime;
                     } else {
                         isJumping = false;
@@ -110,8 +124,8 @@ public class PlayerController : MonoBehaviour
             if(canDash) {
                 canDash = false;
                 isDashing = true;
-                _rb.gravityScale = 0f;
-                _rb.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
+                _playerRB.gravityScale = 0f;
+                _playerRB.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
                 _trail.emitting = true;
                 yield return new WaitForSeconds(dashTime);
                 _trail.emitting = false;
@@ -143,56 +157,50 @@ public class PlayerController : MonoBehaviour
         _GM = GameObject.FindGameObjectWithTag("GM").GetComponent<GameManager>();
 
         lavaCollision = () => {
-            bool isInLava = Physics2D.OverlapCircle(_lavaCheck.position, checkRadius * 1.5f, whatIsLava);
-            if(isInLava) {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
+            health -= 1;
+            _playerTR.position = lastSolidGroundedPos;
         };
     }
 
     private void Update() {
-        _anim.SetBool("isDashing", isDashing);
+        StartCoroutine("SetAnimations");
+
         if(isDashing) {
-            _anim.SetTrigger("Dash");
             canMove = false;
             canJump = false;
-
         } else {
             canMove = true;
             canJump = isGrounded;
         }
-        
-        // ANIMATIONS
-        if(_rb.velocity.x == 0) {
-            _anim.SetBool("isMoving", false);
-        } else {
-            _anim.SetBool("isMoving", true);
-        }
-        _anim.SetBool("isGrounded", isGrounded);
 
+        if(health < 1) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     private void FixedUpdate() {
         if(isDashing) {
             return;
         }
-        _rb.gravityScale = gravityForce;
-
-        if(canMove) {
-            _rb.velocity = new Vector2(inputHorizontal * speed, _rb.velocity.y);
-        }
-
+        StartCoroutine("CheckGroundCollisions");
+        Move();
         //Jump();
 
-        if(!facingRight && _rb.velocity.x > 0) {
+        _playerRB.gravityScale = gravityForce;
+
+        if(!facingRight && _playerRB.velocity.x > 0) {
             Flip();
-        } else if(facingRight && _rb.velocity.x < 0) {
+        } else if(facingRight && _playerRB.velocity.x < 0) {
             Flip();
         }
 
-        isGrounded = Physics2D.OverlapCircle(_groundCheck.position, checkRadius, whatIsGround);
+        if(isOnSolidGround) {
+            lastSolidGroundedPos = _playerTR.position;
+        }
 
-        lavaCollision();
+        if(isInLava) {
+            lavaCollision();
+        }
     }
 
     private void OnDrawGizmosSelected() {
@@ -202,8 +210,35 @@ public class PlayerController : MonoBehaviour
         // Lava Collider Radius
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_lavaCheck.position, checkRadius * 1.5f);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(_solidGroundCheck.position, checkRadius * .5f);
     }
 
+    private IEnumerator CheckGroundCollisions() {
+        isGrounded = Physics2D.OverlapCircle(_groundCheck.position, checkRadius, whatIsGround);
+        isOnSolidGround = Physics2D.OverlapCircle(_solidGroundCheck.position, checkRadius * .5f, whatIsSolidGround);
+        isInLava = Physics2D.OverlapCircle(_lavaCheck.position, checkRadius * 1.5f, whatIsLava);
+        yield return null;
+    }
+
+    private IEnumerator SetAnimations(){
+        _anim.SetBool("isDashing", isDashing);
+        _anim.SetBool("isGrounded", isGrounded);
+
+        if(isDashing) {
+            _anim.SetTrigger("Dash");
+        }
+
+        if(_playerRB.velocity.x == 0) {
+            _anim.SetBool("isMoving", false);
+        } else {
+            _anim.SetBool("isMoving", true);
+        }
+        
+        yield return null;
+    }
+    
     private void Flip() {
         facingRight = !facingRight;
         Vector3 Scaler = transform.localScale;
