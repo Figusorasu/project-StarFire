@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {   
@@ -67,9 +67,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     
-    public delegate void LavaCollision();
-    private LavaCollision lavaCollision;
-
+    private Action lavaCollision;
 
     #region InputHandler
 
@@ -87,7 +85,7 @@ public class PlayerController : MonoBehaviour
                 }
             };
 
-            _inputControls.Player.Dash.performed += ctx => StartCoroutine("Dash");
+            _inputControls.Player.Dash.performed += ctx => StartCoroutine(Dash());
         }
 
         private void Move() {
@@ -133,7 +131,7 @@ public class PlayerController : MonoBehaviour
                 isDashing = false;
                 yield return new WaitForSeconds(dashCooldown);
                 canDash = true;
-                StartCoroutine("Blink");
+                StartCoroutine(Blink());
             }
         }
 
@@ -164,7 +162,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Update() {
-        StartCoroutine("SetAnimations");
+        StartCoroutine(SetAnimations());
 
         if(isDashing) {
             canMove = false;
@@ -232,10 +230,10 @@ public class PlayerController : MonoBehaviour
             _anim.SetTrigger("Dash");
         }
 
-        if(_playerRB.velocity.x == 0) {
-            _anim.SetBool("isMoving", false);
-        } else {
+        if(inputHorizontal == 1 || inputHorizontal == -1) {
             _anim.SetBool("isMoving", true);
+        } else {
+            _anim.SetBool("isMoving", false);
         }
         
         yield return null;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class DebugInfo : MonoBehaviour
@@ -53,5 +54,13 @@ public class DebugInfo : MonoBehaviour
         float frameRate = 0;
         frameRate = Time.frameCount / Time.time;
         return "" + (int)frameRate;
+    }
+
+    public void ReloadCurrentScene() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void HealPlayerFull() {
+        player.GetComponent<PlayerController>().health = player.GetComponent<PlayerController>().numOfHearts;
     }
 }
