@@ -230,7 +230,7 @@ public class PlayerController : MonoBehaviour
             _anim.SetTrigger("Dash");
         }
 
-        if(inputHorizontal == 1 || inputHorizontal == -1) {
+        if(inputHorizontal != 0) {
             _anim.SetBool("isMoving", true);
         } else {
             _anim.SetBool("isMoving", false);
