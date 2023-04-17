@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
         [Header("Components")]
             public Rigidbody2D _rb;
             [SerializeField] private Transform _groundCheck;
+            [SerializeField] private Transform _lavaCheck;
             [SerializeField] private Animator _anim;
             [SerializeField] private TrailRenderer _trail;
 
@@ -57,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
     
-    public delegate void LavaCollision(bool i);
+    public delegate void LavaCollision();
     private LavaCollision lavaCollision;
 
 
@@ -106,16 +107,27 @@ public class PlayerController : MonoBehaviour
         }
 
         private IEnumerator Dash() {
-            canDash = false;
-            isDashing = true;
-            _rb.gravityScale = 0f;
-            _rb.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
-            _trail.emitting = true;
-            yield return new WaitForSeconds(dashTime);
-            _trail.emitting = false;
-            isDashing = false;
-            yield return new WaitForSeconds(dashCooldown);
-            canDash = true;
+            if(canDash) {
+                canDash = false;
+                isDashing = true;
+                _rb.gravityScale = 0f;
+                _rb.velocity = new Vector2(transform.localScale.x * dashForce, 0f);
+                _trail.emitting = true;
+                yield return new WaitForSeconds(dashTime);
+                _trail.emitting = false;
+                isDashing = false;
+                yield return new WaitForSeconds(dashCooldown);
+                canDash = true;
+                StartCoroutine("Blink");
+            }
+        }
+
+        private IEnumerator Blink() {
+            GameObject gfx = gameObject.GetComponent<Transform>().GetChild(0).gameObject;
+
+            gfx.SetActive(false);
+            yield return new WaitForSeconds(.1f);
+            gfx.SetActive(true);
         }
 
         private void OnEnable() {
@@ -130,7 +142,8 @@ public class PlayerController : MonoBehaviour
     private void Start() {
         _GM = GameObject.FindGameObjectWithTag("GM").GetComponent<GameManager>();
 
-        lavaCollision = (bool isInLava) => {
+        lavaCollision = () => {
+            bool isInLava = Physics2D.OverlapCircle(_lavaCheck.position, checkRadius * 1.5f, whatIsLava);
             if(isInLava) {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
@@ -179,14 +192,16 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(_groundCheck.position, checkRadius, whatIsGround);
 
-        bool isInLava = Physics2D.OverlapCircle(_groundCheck.position, checkRadius, whatIsLava); 
-        lavaCollision(isInLava);
+        lavaCollision();
     }
 
     private void OnDrawGizmosSelected() {
-        // Ground Check Radius Display
-        Gizmos.color = Color.red;
+        // Ground Check Radius
+        Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(_groundCheck.position, checkRadius);
+        // Lava Collider Radius
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(_lavaCheck.position, checkRadius * 1.5f);
     }
 
     private void Flip() {
