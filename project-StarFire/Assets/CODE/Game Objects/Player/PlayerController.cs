@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.ParticleSystemJobs;
 
 public class PlayerController : MonoBehaviour
 {   
@@ -60,6 +61,7 @@ public class PlayerController : MonoBehaviour
             public Transform _playerTR;
             [SerializeField] private Animator _anim;
             [SerializeField] private TrailRenderer _trail;
+            [SerializeField] private GameObject headParticles;
 
             private GameManager _GM;
             private InputManager _inputControls;
