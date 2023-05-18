@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
 
-        if(isOnSolidGround) {
+        if(isOnSolidGround && isGrounded) {
             lastSolidGroundedPos = _playerTR.position;
         }
 
